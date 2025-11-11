@@ -69,7 +69,8 @@
               "buildTarget": "mtd-itsa-compliance-fe:build:production"
             },
             "development": {
-              "buildTarget": "mtd-itsa-compliance-fe:build:development"
+              "buildTarget": "mtd-itsa-compliance-fe:build:development",
+                  "proxyConfig": "proxy.conf.json" // Add this line
             }
           },
           "defaultConfiguration": "development"
