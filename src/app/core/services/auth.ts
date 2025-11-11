@@ -1,5 +1,5 @@
-
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -36,11 +36,15 @@ export class AuthService {
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   public readonly isAuthenticated$: Observable<boolean> = this._isAuthenticated.asObservable();
 
+  private isBrowser: boolean;
+
   constructor(
     private router: Router,
     private httpClient: HttpClient,
-    private apiConfig: ApiConfiguration
+    private apiConfig: ApiConfiguration,
+    @Inject(PLATFORM_ID) platformId: object
   ) {
+    this.isBrowser = isPlatformBrowser(platformId);
     this.loadUserFromLocalStorage();
   }
 
@@ -48,6 +52,9 @@ export class AuthService {
    * Loads user and token from local storage on service initialization.
    */
   private loadUserFromLocalStorage(): void {
+    if (!this.isBrowser) {
+      return;
+    }
     const token = localStorage.getItem(this.TOKEN_KEY);
     const userString = localStorage.getItem(this.USER_KEY);
 
@@ -71,6 +78,9 @@ export class AuthService {
    * @param user The user object containing userId, userName, and token.
    */
   private saveSession(user: CurrentUser): void {
+    if (!this.isBrowser) {
+      return;
+    }
     localStorage.setItem(this.TOKEN_KEY, user.token);
     localStorage.setItem(this.USER_KEY, JSON.stringify({ userId: user.userId, userName: user.userName }));
     this._currentUser.next(user);
@@ -81,6 +91,9 @@ export class AuthService {
    * Clears session data from local storage and resets observables.
    */
   private clearSession(): void {
+    if (!this.isBrowser) {
+      return;
+    }
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this._currentUser.next(null);
@@ -94,7 +107,7 @@ export class AuthService {
    */
   register(request: RegisterRequest): Observable<CurrentUser> {
     const params: ApiAuthRegisterPost$Params = {
-      body: request // Wrap the request in a 'body' property as expected by the generated function
+      body: request
     };
     return apiAuthRegisterPost(this.httpClient, this.apiConfig.rootUrl, params).pipe(
       map((response: StrictHttpResponse<any>) => {
@@ -116,7 +129,7 @@ export class AuthService {
    */
   login(request: LoginRequest): Observable<CurrentUser> {
     const params: ApiAuthLoginPost$Params = {
-      body: request // Wrap the request in a 'body' property as expected by the generated function
+      body: request
     };
     return apiAuthLoginPost(this.httpClient, this.apiConfig.rootUrl, params).pipe(
       map((response: StrictHttpResponse<any>) => {
@@ -136,7 +149,7 @@ export class AuthService {
    */
   logout(): void {
     this.clearSession();
-    this.router.navigate(['/auth/login']); // Navigate to the auth login page after logout
+    this.router.navigate(['/auth/login']);
   }
 
   /**
