@@ -1,16 +1,20 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 // Import the generated API functions and models
+import { ApiConfiguration } from '../api/api-configuration';
+import { RegisterRequest, LoginRequest } from '../api/models';
 import { apiAuthLoginPost } from '../api/fn/api/api-auth-login-post';
 import { apiAuthRegisterPost } from '../api/fn/api/api-auth-register-post';
 import { StrictHttpResponse } from '../api/strict-http-response';
-import { RegisterRequest, LoginRequest } from '../api/models';
-import { HttpClient } from '@angular/common/http';
-import { ApiConfiguration } from '../api/api-configuration';
+
+// Import the generated parameter types for the API functions
+import { ApiAuthRegisterPost$Params } from '../api/fn/api/api-auth-register-post';
+import { ApiAuthLoginPost$Params } from '../api/fn/api/api-auth-login-post';
 
 // Define the shape of the user data we want to store
 interface CurrentUser {
@@ -34,8 +38,8 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private httpClient: HttpClient, // Inject HttpClient for generated functions
-    private apiConfig: ApiConfiguration // Inject ApiConfiguration for generated functions
+    private httpClient: HttpClient,
+    private apiConfig: ApiConfiguration
   ) {
     this.loadUserFromLocalStorage();
   }
@@ -89,10 +93,11 @@ export class AuthService {
    * @returns An observable of the AuthResponse.
    */
   register(request: RegisterRequest): Observable<CurrentUser> {
-    return apiAuthRegisterPost(this.httpClient, this.apiConfig.rootUrl, request).pipe(
-      map((response: StrictHttpResponse<any>) => { // 'any' because swagger spec doesn't explicitly define AuthResponse for register
-        // Based on README.md & mtd-itsa.md, the response should be AuthResponse.
-        // We'll cast it here, assuming the backend adheres to the spec.
+    const params: ApiAuthRegisterPost$Params = {
+      body: request // Wrap the request in a 'body' property as expected by the generated function
+    };
+    return apiAuthRegisterPost(this.httpClient, this.apiConfig.rootUrl, params).pipe(
+      map((response: StrictHttpResponse<any>) => {
         const authResponse = response.body as CurrentUser;
         this.saveSession(authResponse);
         return authResponse;
@@ -110,10 +115,11 @@ export class AuthService {
    * @returns An observable of the AuthResponse.
    */
   login(request: LoginRequest): Observable<CurrentUser> {
-    return apiAuthLoginPost(this.httpClient, this.apiConfig.rootUrl, request).pipe(
-      map((response: StrictHttpResponse<any>) => { // 'any' because swagger spec doesn't explicitly define AuthResponse for login
-        // Based on README.md & mtd-itsa.md, the response should be AuthResponse.
-        // We'll cast it here, assuming the backend adheres to the spec.
+    const params: ApiAuthLoginPost$Params = {
+      body: request // Wrap the request in a 'body' property as expected by the generated function
+    };
+    return apiAuthLoginPost(this.httpClient, this.apiConfig.rootUrl, params).pipe(
+      map((response: StrictHttpResponse<any>) => {
         const authResponse = response.body as CurrentUser;
         this.saveSession(authResponse);
         return authResponse;
@@ -130,7 +136,7 @@ export class AuthService {
    */
   logout(): void {
     this.clearSession();
-    this.router.navigate(['/auth']); // Navigate to the auth page after logout
+    this.router.navigate(['/auth/login']); // Navigate to the auth login page after logout
   }
 
   /**
