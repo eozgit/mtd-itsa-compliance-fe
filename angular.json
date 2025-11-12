@@ -70,13 +70,10 @@
             },
             "development": {
               "buildTarget": "mtd-itsa-compliance-fe:build:development",
-              "proxyConfig": "proxy.conf.js" // <<< REMOVE THIS LINE
             }
           },
           "defaultConfiguration": "development",
-          // ADD THIS NEW SECTION for proxying API calls directly
           "options": {
-            "proxyConfig": "proxy.conf.js" // This is where `proxyConfig` should be for `ng serve` to use it correctly
           }
         },
         "extract-i18n": {
