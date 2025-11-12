@@ -1,59 +1,66 @@
-# MtdItsaComplianceFe
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.9.
+# MTD-ITSA Compliance Portal Frontend
 
-## Development server
+This project is the Angular (TypeScript) frontend for a Making Tax Digital for Income Tax Self Assessment (MTD-ITSA) Compliance Portal. It aims to provide a robust, full-stack boilerplate, focusing on secure user authentication, business registration, and quarterly income/expense data management.
 
-To start a local development server, run:
+## Key Features
 
-```bash
-ng serve
-```
+*   **Secure User Authentication:** Implemented Login and Register screens.
+*   **Business Setup:** Form for registering a single self-employment business.
+*   **Admin Dashboard Structure:** Basic navigation and user information display (upcoming).
+*   **Quarterly Data Entry & Submission:** UI for inputting income/expenses and simulated submission (upcoming).
+*   **Data Enrichment Display:** Net Profit/Loss, Cumulative Estimated Tax Liability (upcoming).
+*   **Data Visualization:** Income vs. Expenses trend comparison (upcoming).
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Technical Stack
 
-## Code scaffolding
+*   **Frontend:** Angular (TypeScript)
+*   **UI/Styling:** Tailwind CSS
+*   **API Client:** Generated from OpenAPI spec using `ng-openapi-gen`
+*   **End-to-End Testing:** Playwright
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Getting Started
 
-```bash
-ng generate component component-name
-```
+### Prerequisites
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Ensure you have Node.js (LTS recommended) and npm installed.
 
-```bash
-ng generate --help
-```
+### Installation
 
-## Building
+1.  Clone the repository.
+2.  Navigate to the project directory.
+3.  Install dependencies:
+    ````bash
+    npm install
+    ````
 
-To build the project run:
+### Development Server
 
-```bash
-ng build
-```
+To start the local development server (with proxy configured for API calls), run:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+````bash
+npm run start
+````
 
-## Running unit tests
+Open your browser and navigate to `http://localhost:4200/`. The application will automatically reload if you change any source files.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### API Client Generation
 
-```bash
-ng test
-```
+The API client is generated from an OpenAPI specification. If the OpenAPI spec changes, you can regenerate the client using:
 
-## Running end-to-end tests
+````bash
+npm run generate:api
+````
+*(Note: This assumes you have a script named `generate:api` configured in your `package.json` for `ng-openapi-gen`)*
 
-For end-to-end (e2e) testing, run:
+## Testing
 
-```bash
-ng e2e
-```
+### End-to-End Tests (Playwright)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+To run the End-to-End tests using Playwright, execute:
 
-## Additional Resources
+````bash
+npm run test:e2e
+````
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This will launch the application and run the Playwright tests in a headless browser (Chromium by default). A detailed HTML report will be generated after the tests complete, which can be viewed by running `npx playwright show-report`.

@@ -1,1 +1,53 @@
-<p>setup works!</p>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        Set Up Your Business
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Enter details for your self-employment business.
+      </p>
+    </div>
+    <form class="mt-8 space-y-6" [formGroup]="businessSetupForm" (ngSubmit)="onSubmit()">
+      <div class="rounded-md shadow-sm -space-y-px">
+        <div>
+          <label for="business-name" class="sr-only">Business Name</label>
+          <input id="business-name" name="businessName" type="text" required
+                 class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                 placeholder="Business Name" formControlName="name">
+          <div *ngIf="businessSetupForm.get('name')?.invalid && businessSetupForm.get('name')?.touched"
+               class="text-red-600 text-sm mt-1" id="business-name-error">
+            <div *ngIf="businessSetupForm.get('name')?.errors?.['required']">
+              Business Name is required.
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="accounting-start-date" class="sr-only">Accounting Start Date</label>
+          <input id="accounting-start-date" name="accountingStartDate" type="date" required
+                 class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                 placeholder="Accounting Start Date" formControlName="startDate">
+          <div *ngIf="businessSetupForm.get('startDate')?.invalid && businessSetupForm.get('startDate')?.touched"
+               class="text-red-600 text-sm mt-1" id="start-date-error">
+            <div *ngIf="businessSetupForm.get('startDate')?.errors?.['required']">
+              Accounting Start Date is required.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="text-red-600 text-sm text-center">
+        {{ errorMessage }}
+      </div>
+
+      <div>
+        <button type="submit"
+                [disabled]="businessSetupForm.invalid || isLoading"
+                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <span *ngIf="!isLoading">Save Business Details</span>
+          <span *ngIf="isLoading">Saving...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
