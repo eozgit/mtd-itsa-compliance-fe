@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+//import { test, expect } from './api-fixtures';
 
 test.describe('Business Setup', () => {
   // Before each test, register a new user to land on the /setup page
@@ -21,11 +22,12 @@ test.describe('Business Setup', () => {
     await expect(submitButton).toBeEnabled();
     await submitButton.click();
 
+    // After successful registration, the app should redirect to /setup
+    await page.waitForURL('/setup');
+
     const localStorageToken0 = await page.evaluate(() => localStorage.getItem('auth_token'));
     console.log(`Playwright: localStorage['auth_token'] after submit: ${localStorageToken0 ? localStorageToken0.substring(0, 10) + '...' : 'null'}`);
 
-    // After successful registration, the app should redirect to /setup
-    await page.waitForURL('/setup');
     // Wait for the network to be idle to ensure all Angular components and data are loaded
     await page.waitForLoadState('networkidle');
 
@@ -73,7 +75,7 @@ test.describe('Business Setup', () => {
     console.log(`API /api/business response status: ${response.status()}`);
 
     // Expect the API call to be successful (e.g., 200 or 201 Created)
-    expect(response.status()).toBe(200); // The ng-openapi-gen generated a void response, so 200 is expected. mtd2.md says 201, but the generated client expects 200.
+    expect(response.status()).toBe(201); // The ng-openapi-gen generated a void response, so 200 is expected. mtd2.md says 201, but the generated client expects 200.
 
     await page.waitForURL('/dashboard');
     await expect(page).toHaveURL('/dashboard');

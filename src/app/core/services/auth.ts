@@ -133,10 +133,11 @@ export class AuthService {
     };
     return apiAuthRegisterPost(this.httpClient, this.apiConfig.rootUrl, params).pipe(
       map((response: StrictHttpResponse<any>) => {
+        console.log('AuthService register map: Full API response object:', response);
         // Explicitly map properties from snake_case API response to camelCase CurrentUser interface
         const authResponse: CurrentUser = {
-          userId: response.body.user_id,
-          userName: response.body.user_name,
+          userId: response.body.userId,
+          userName: response.body.userName,
           token: response.body.token
         };
         console.log('AuthService register map: Constructed authResponse:', JSON.stringify(authResponse)); // NEW: Log constructed object
@@ -161,10 +162,11 @@ export class AuthService {
     };
     return apiAuthLoginPost(this.httpClient, this.apiConfig.rootUrl, params).pipe(
       map((response: StrictHttpResponse<any>) => {
+        console.log('AuthService register map: Full API response object:', response);
         // Explicitly map properties from snake_case API response to camelCase CurrentUser interface
         const authResponse: CurrentUser = {
-          userId: response.body.user_id,
-          userName: response.body.user_name,
+          userId: response.body.userId,
+          userName: response.body.userName,
           token: response.body.token
         };
         console.log('AuthService login map: Constructed authResponse:', JSON.stringify(authResponse)); // NEW: Log constructed object

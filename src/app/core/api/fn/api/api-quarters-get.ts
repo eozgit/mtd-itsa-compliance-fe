@@ -7,21 +7,22 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { QuartersResponse } from '../../models/quarters-response';
 
 export interface ApiQuartersGet$Params {
 }
 
-export function apiQuartersGet(http: HttpClient, rootUrl: string, params?: ApiQuartersGet$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+export function apiQuartersGet(http: HttpClient, rootUrl: string, params?: ApiQuartersGet$Params, context?: HttpContext): Observable<StrictHttpResponse<QuartersResponse>> {
   const rb = new RequestBuilder(rootUrl, apiQuartersGet.PATH, 'get');
   if (params) {
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'json', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<QuartersResponse>;
     })
   );
 }

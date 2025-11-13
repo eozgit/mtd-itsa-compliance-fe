@@ -10,7 +10,8 @@
     "serve:ssr:mtd-itsa-compliance-fe": "node dist/mtd-itsa-compliance-fe/server/server.mjs",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+      "generate:api": "ng-openapi-gen --input http://localhost:5129/swagger/v1/swagger.json --output src/app/core/api"
   },
   "prettier": {
     "printWidth": 100,
