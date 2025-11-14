@@ -1,7 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, combineLatest } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
@@ -15,6 +15,7 @@ import { StrictHttpResponse } from '../api/strict-http-response';
 // Import the generated parameter types for the API functions
 import { ApiAuthRegisterPost$Params } from '../api/fn/api/api-auth-register-post';
 import { ApiAuthLoginPost$Params } from '../api/fn/api/api-auth-login-post';
+
 
 // Define the shape of the user data we want to store
 interface CurrentUser {
@@ -36,6 +37,10 @@ export class AuthService {
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   public readonly isAuthenticated$: Observable<boolean> = this._isAuthenticated.asObservable();
 
+  // NEW: Subject to signal that initial loading from localStorage is complete
+  private _isAuthServiceReady = new BehaviorSubject<boolean>(false);
+  public readonly isAuthServiceReady$: Observable<boolean> = this._isAuthServiceReady.asObservable();
+
   private isBrowser: boolean;
 
   constructor(
@@ -47,8 +52,9 @@ export class AuthService {
     this.isBrowser = isPlatformBrowser(platformId);
     console.log('AuthService constructor: isPlatformBrowser =', this.isBrowser);
     this.loadUserFromLocalStorage();
+    // NEW: Signal that the AuthService has completed its initial setup
+    this._isAuthServiceReady.next(true);
   }
-
   isAuthenticated(): boolean {
     const isAuthenticated = !!this._currentUser.value?.token;
     console.log(`AuthService.isAuthenticated() called. Current user has token: ${isAuthenticated}`);

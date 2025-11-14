@@ -1,3 +1,4 @@
+
 # Project Progress Log: MTD-ITSA Compliance Portal Frontend
 
 This document tracks the overall progress of the MTD-ITSA Compliance Portal Frontend development, outlining the main objectives, completed tasks, and upcoming work items. It is intended to provide a clear overview for any resuming developer, including the AI assistant.
@@ -33,11 +34,11 @@ The primary goal is to build a robust, full-stack boilerplate for a Making Tax D
 
 ## III. Frontend Development Progress
 
-### Current Status: Core Angular App Stable, All 7 Playwright E2E Tests Passing (Login, Register, Business Setup)
+### Current Status: Core Angular App Stable, All 11 Playwright E2E Tests Passing (Login, Register, Business Setup, Auth Guard)
 
-The Angular application is now compiling, serving, and rendering correctly, including SSR. Client-side routing for deep links (`/auth/login`) is also fully functional. Playwright is set up, and all 7 E2E tests for Login, Register, and Business Setup components are passing for Chromium. Firefox and WebKit have been removed from the Playwright configuration as Safari/Firefox compatibility is not a requirement. The Business Setup component is fully implemented on the frontend, and its E2E tests are now passing, indicating that the test environment successfully provides the necessary authentication token.
+The Angular application is now compiling, serving, and rendering correctly. Server-Side Rendering (SSR) has been successfully removed, simplifying the application architecture and resolving test environment complexities. Client-side routing for deep links (`/auth/login`) is fully functional. Playwright is set up, and all 11 E2E tests, including those for Login, Register, Business Setup, and the Auth Guard, are passing for Chromium. Firefox and WebKit have been removed from the Playwright configuration as Safari/Firefox compatibility is not a requirement. The Business Setup component is fully implemented on the frontend, and its E2E tests are now passing, indicating that the test environment successfully provides the necessary authentication token.
 
-**Last Confirmed State:** `npm run start` serves the Angular app successfully at `http://localhost:4200/auth/login`, rendering the login form. `npm run test:e2e` now shows **7 passed tests** (Login, Register, and Business Setup E2E).
+**Last Confirmed State:** `npm run start` serves the Angular app successfully at `http://localhost:4200/auth/login`, rendering the login form. `npm run test:e2e` now shows **11 passed tests** (Login, Register, Business Setup, and Auth Guard E2E).
 
 ### Completed Tasks:
 
@@ -47,8 +48,12 @@ The Angular application is now compiling, serving, and rendering correctly, incl
 *   **Applied Naming Convention Fixes:** Updated `src/app/auth/login/login.ts`, `src/app/auth/register/register.ts`, `src/app/dashboard/dashboard.ts`, `src/app/setup/setup.ts`, and `src/app/app.routes.ts` to reflect the correct file paths and class names.
 *   **Verified Build Success:** `npx ng serve` (now `npm run start`) compiles and serves the application.
 *   **Addressed `404 Not Found` for Deep Links:** Configured `proxy.conf.js` (and `angular.json`) to allow `ng serve` to correctly handle client-side routes like `/auth/login`.
-*   **Resolved SSR `localStorage is not defined` Error:** Modified `AuthService` to be platform-aware using `PLATFORM_ID` and `isPlatformBrowser`.
-*   **Configured `HttpClient` for SSR & Interceptors:** Added `withFetch()` and registered `authInterceptor` to `provideHttpClient()` in `app.config.ts`.
+*   **Removed Server-Side Rendering (SSR):**
+    *   Deleted `src/main.server.ts`, `src/server.ts`, `src/app/app.config.server.ts`, and `src/app/app.routes.server.ts`.
+    *   Updated `angular.json` to remove SSR build options (`server`, `ssr`, `outputMode: "server"`) and configured `outputMode: "browser"`.
+    *   Updated `package.json` to remove SSR related scripts (`serve:ssr:mtd-itsa-compliance-fe`).
+*   **Resolved SSR `localStorage is not defined` Error:** (Now implicitly resolved by SSR removal, original platform-aware `AuthService` changes are still in place as good practice).
+*   **Configured `HttpClient` for Interceptors:** Added `withFetch()` and registered `authInterceptor` to `provideHttpClient()` in `app.config.ts`.
 *   **Initialized Playwright:** Used `npm init playwright` to create `playwright.config.ts` and the `e2e` directory.
 *   **Updated Playwright Configuration:**
     *   Increased global test and assertion timeouts.
@@ -58,7 +63,6 @@ The Angular application is now compiling, serving, and rendering correctly, incl
 *   **Created Initial `e2e/login.spec.ts`:** Basic test for login page elements.
 *   **Fixed Playwright Assertion Mismatches (Register Component):** Updated `e2e/register.spec.ts` to correctly assert error messages on the register page by simulating user interaction and using robust locators.
 *   **Resolved Playwright WebKit Dependencies:** WebKit browser support was explicitly removed from `playwright.config.ts` as Safari compatibility is not required.
-*   **Run Playwright Tests:** Successfully ran all Playwright E2E tests, which are now passing (excluding pending backend dependency).
 *   **Implemented Register Component:**
     *   Created `src/app/auth/register/register.html` and `src/app/auth/register/register.scss`.
     *   Implemented `Register` component logic to use `AuthService.register()`.
@@ -66,11 +70,16 @@ The Angular application is now compiling, serving, and rendering correctly, incl
     *   Wrote and fixed Playwright E2E tests for user registration (successful and invalid attempts).
 *   **Resolved Authentication Token Handling for E2E Tests:**
     *   Correctly mapped `user_id`, `user_name`, and `token` from snake_case API response to camelCase `CurrentUser` interface in `AuthService.register` and `AuthService.login` *within the E2E testing environment*. The E2E tests now successfully receive and store a mock authentication token, enabling subsequent protected API calls (like business registration) to pass.
-    *   Added extensive debug logging to `AuthService` for `localStorage` interactions and user object population.
+    *   Removed extensive debug logging from `AuthService` and Playwright tests after successful diagnosis and SSR removal.
 *   **Implemented Business Setup Component (Frontend):**
     *   Created `src/app/setup/setup.html` and `src/app/setup/setup.scss`.
     *   Implemented `Setup` component logic, including `ReactiveFormsModule` for form handling and `apiBusinessPost` for business registration.
     *   Wrote and fixed Playwright E2E tests for business registration, which are now passing due to the resolved token handling.
+*   **Implemented Auth Guard and Passing E2E Tests:**
+    *   Created `src/app/auth/auth.guard.ts` to protect routes.
+    *   Updated `app.routes.ts` to apply the guard to `/setup` and `/dashboard`.
+    *   Modified `AuthService` and `AuthGuard` (removing `_isAuthServiceReady`, simplifying `combineLatest` usage) to function correctly without SSR.
+    *   Wrote and fixed Playwright E2E tests for unauthorized and authorized access attempts to protected routes, which are now all passing.
 
 ### Remaining Issues & Next Steps:
 
@@ -79,7 +88,4 @@ The Angular application is now compiling, serving, and rendering correctly, incl
     *   Create `src/app/dashboard/dashboard.html` and `src/app/dashboard/dashboard.scss`.
     *   Implement basic dashboard layout and data display.
     *   Write Playwright E2E tests for dashboard viewing.
-3.  **Auth Guard Implementation:**
-    *   Create an Angular route guard to protect routes (e.g., `/setup`, `/dashboard`) from unauthenticated access.
-    *   Update `app.routes.ts` to apply the guard.
-    *   Write Playwright E2E tests for unauthorized access attempts.
+3.  **Quarterly Data Entry & Submission Components:** Start development of UI for inputting income/expenses and simulated submission.

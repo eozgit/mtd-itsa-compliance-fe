@@ -1,24 +1,25 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../core/services/auth';
-import { Observable, map, take } from 'rxjs'; // 🛑 Import Observable, map, and take
-// authGuard.ts (Fully Corrected Version)
+import { Observable, map, take, combineLatest, filter } from 'rxjs'; // 🛑 Import combineLatest and filter
+
 export const authGuard: CanActivateFn = (route, state): Observable<boolean | UrlTree> => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // The guard returns an Observable that completes after one emission (take(1))
-  // This forces the Angular Router to WAIT for the AuthService state to settle.
-  return authService.isAuthenticated$.pipe(
-    take(1), // Get the current status and complete the stream
-    map(isAuthenticated => {
-      console.log('AuthGuard (Observable): isAuthenticated$', isAuthenticated);
+  // NEW: Combine isAuthenticated$ with isAuthServiceReady$ to ensure the service has finished loading
+  return combineLatest([
+    authService.isAuthServiceReady$.pipe(filter(ready => ready), take(1)), // Wait until the service is ready
+    authService.isAuthenticated$.pipe(take(1)) // Then take the current authentication status
+  ]).pipe(
+    map(([_, isAuthenticated]) => { // We only care about isAuthenticated from the second observable
+      console.log(`AuthGuard (combineLatest map): isAuthenticated$ value: ${isAuthenticated}`);
 
       if (isAuthenticated) {
-        return true; // Go to the protected route
+        console.log(`AuthGuard (combineLatest map): isAuthenticated is TRUE. Allowing access to ${state.url}.`);
+        return true;
       } else {
-        console.log('AuthGuard (Observable): User not authenticated, creating UrlTree.');
-        // Return a UrlTree object to trigger the redirection
+        console.log(`AuthGuard (combineLatest map): isAuthenticated is FALSE. Redirecting to /auth/login for ${state.url}.`);
         return router.createUrlTree(['/auth/login'], {
           queryParams: { returnUrl: state.url }
         });

@@ -1,3 +1,4 @@
+diff.txt
 .editorconfig
 .gitignore
 .vscode/extensions.json
@@ -20,10 +21,8 @@ postcss.config.js
 proxy.conf.js
 public/favicon.ico
 simulate_api.sh
-src/app/app.config.server.ts
 src/app/app.config.ts
 src/app/app.html
-src/app/app.routes.server.ts
 src/app/app.routes.ts
 src/app/app.scss
 src/app/app.spec.ts
@@ -73,9 +72,7 @@ src/app/setup/setup.scss
 src/app/setup/setup.spec.ts
 src/app/setup/setup.ts
 src/index.html
-src/main.server.ts
 src/main.ts
-src/server.ts
 src/styles.scss
 tailwind.config.js
 tsconfig.app.json

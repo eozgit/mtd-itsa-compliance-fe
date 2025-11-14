@@ -8,6 +8,13 @@ const TEST_USER = {
 };
 
 test.describe('Auth Guard', () => {
+  // The global console listener is no longer needed after debugging SSR
+  // test.beforeEach(async ({ page }) => {
+  //   page.on('console', msg => {
+  //     console.log(`[[BROWSER_CONSOLE]]: ${msg.type().toUpperCase()}: ${msg.text()}`);
+  //   });
+  // });
+
   test('should redirect unauthenticated user from /setup to /auth/login', async ({ page }) => {
     // Ensure no token is present (e.g., by clearing local storage or starting fresh)
     await page.goto('/auth/login'); // Go to login first to ensure Angular app loads and initializes AuthService
@@ -41,16 +48,22 @@ test.describe('Auth Guard', () => {
     // Inject script to set auth state before the page loads/navigates.
     // This is the most reliable way to mock initial state.
     await page.context().addInitScript((user) => {
+      // Diagnostic logs removed as they are no longer needed post-SSR removal
       localStorage.clear();
       localStorage.setItem('auth_token', user.token);
-      // Correct payload: only user data, no token
       const userData = { userId: user.userId, userName: user.userName };
       localStorage.setItem('current_user', JSON.stringify(userData));
     }, TEST_USER);
 
     // Navigate directly to the protected route /setup.
-    // The init script runs before the Angular app's bundle is executed on this navigation.
+    // Without SSR, the client-side Angular app will handle this.
     await page.goto('/setup');
+
+    // Post-navigation localStorage checks removed as they are no longer needed
+    // const tokenAfterLoad = await page.evaluate(() => localStorage.getItem('auth_token'));
+    // const userAfterLoad = await page.evaluate(() => localStorage.getItem('current_user'));
+    // console.log(`[[PLAYWRIGHT_PAGE_EVALUATE]]: localStorage 'auth_token' after page.goto('/setup'): ${tokenAfterLoad ? tokenAfterLoad.substring(0,10) + '...' : 'null'}`);
+    // console.log(`[[PLAYWRIGHT_PAGE_EVALUATE]]: localStorage 'current_user' after page.goto('/setup'): ${userAfterLoad ? userAfterLoad.substring(0,10) + '...' : 'null'}`);
 
     // Expect to remain on /setup and see the component
     await expect(page).toHaveURL('/setup');
@@ -62,16 +75,22 @@ test.describe('Auth Guard', () => {
     // Inject script to set auth state before the page loads/navigates.
     // This is the most reliable way to mock initial state.
     await page.context().addInitScript((user) => {
+      // Diagnostic logs removed as they are no longer needed post-SSR removal
       localStorage.clear();
       localStorage.setItem('auth_token', user.token);
-      // Correct payload: only user data, no token
       const userData = { userId: user.userId, userName: user.userName };
       localStorage.setItem('current_user', JSON.stringify(userData));
     }, TEST_USER);
 
     // Navigate directly to the protected route /dashboard.
-    // The init script runs before the Angular app's bundle is executed on this navigation.
+    // Without SSR, the client-side Angular app will handle this.
     await page.goto('/dashboard');
+
+    // Post-navigation localStorage checks removed as they are no longer needed
+    // const tokenAfterLoad = await page.evaluate(() => localStorage.getItem('auth_token'));
+    // const userAfterLoad = await page.evaluate(() => localStorage.getItem('current_user'));
+    // console.log(`[[PLAYWRIGHT_PAGE_EVALUATE]]: localStorage 'auth_token' after page.goto('/dashboard'): ${tokenAfterLoad ? tokenAfterLoad.substring(0,10) + '...' : 'null'}`);
+    // console.log(`[[PLAYWRIGHT_PAGE_EVALUATE]]: localStorage 'current_user' after page.goto('/dashboard'): ${userAfterLoad ? userAfterLoad.substring(0,10) + '...' : 'null'}`);
 
     // Expect to land directly on the dashboard page
     await expect(page).toHaveURL('/dashboard');
