@@ -1,10 +1,10 @@
-MANIFEST.txt
 .editorconfig
 .gitignore
 .vscode/extensions.json
 .vscode/launch.json
 .vscode/tasks.json
 LICENSE
+MANIFEST.txt
 PROGRESS.md
 README.md
 angular.json
