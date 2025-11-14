@@ -49,6 +49,12 @@ export class AuthService {
     this.loadUserFromLocalStorage();
   }
 
+  isAuthenticated(): boolean {
+    const isAuthenticated = !!this._currentUser.value?.token;
+    console.log(`AuthService.isAuthenticated() called. Current user has token: ${isAuthenticated}`);
+    return isAuthenticated;
+  }
+
   /**
    * Loads user and token from local storage on service initialization.
    */

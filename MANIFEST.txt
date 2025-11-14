@@ -8,6 +8,7 @@ MANIFEST.txt
 PROGRESS.md
 README.md
 angular.json
+e2e/auth-guard.spec.ts
 e2e/login.spec.ts
 e2e/register.spec.ts
 e2e/setup.spec.ts
@@ -29,6 +30,7 @@ src/app/app.spec.ts
 src/app/app.ts
 src/app/auth-interceptor.spec.ts
 src/app/auth-interceptor.ts
+src/app/auth/auth.guard.ts
 src/app/auth/login/login.html
 src/app/auth/login/login.scss
 src/app/auth/login/login.spec.ts
