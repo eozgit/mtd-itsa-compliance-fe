@@ -34,11 +34,11 @@ The primary goal is to build a robust, full-stack boilerplate for a Making Tax D
 
 ## III. Frontend Development Progress
 
-### Current Status: Core Angular App Stable, All 11 Playwright E2E Tests Passing (Login, Register, Business Setup, Auth Guard)
+### Current Status: Core Angular App Stable, All 13 Playwright E2E Tests Passing (Login, Register, Business Setup, Auth Guard, Dashboard)
 
-The Angular application is now compiling, serving, and rendering correctly. Server-Side Rendering (SSR) has been successfully removed, simplifying the application architecture and resolving test environment complexities. Client-side routing for deep links (`/auth/login`) is fully functional. Playwright is set up, and all 11 E2E tests, including those for Login, Register, Business Setup, and the Auth Guard, are passing for Chromium. Firefox and WebKit have been removed from the Playwright configuration as Safari/Firefox compatibility is not a requirement. The Business Setup component is fully implemented on the frontend, and its E2E tests are now passing, indicating that the test environment successfully provides the necessary authentication token.
+The Angular application is now compiling, serving, and rendering correctly. Server-Side Rendering (SSR) has been successfully removed, simplifying the application architecture and resolving test environment complexities. Client-side routing for deep links (`/auth/login`) is fully functional. Playwright is set up, and all 13 E2E tests, including those for Login, Register, Business Setup, Auth Guard, and now the **Dashboard**, are passing for Chromium. Firefox and WebKit have been removed from the Playwright configuration as Safari/Firefox compatibility is not a requirement. The Business Setup component is fully implemented on the frontend, and its E2E tests are now passing, indicating that the test environment successfully provides the necessary authentication token.
 
-**Last Confirmed State:** `npm run start` serves the Angular app successfully at `http://localhost:4200/auth/login`, rendering the login form. `npm run test:e2e` now shows **11 passed tests** (Login, Register, Business Setup, and Auth Guard E2E).
+**Last Confirmed State:** `npm run start` serves the Angular app successfully at `http://localhost:4200/auth/login`, rendering the login form. `npm run test:e2e` now shows **13 passed tests** (Login, Register, Business Setup, Auth Guard, and Dashboard E2E).
 
 ### Completed Tasks:
 
@@ -80,12 +80,18 @@ The Angular application is now compiling, serving, and rendering correctly. Serv
     *   Updated `app.routes.ts` to apply the guard to `/setup` and `/dashboard`.
     *   Modified `AuthService` and `AuthGuard` (removing `_isAuthServiceReady`, simplifying `combineLatest` usage) to function correctly without SSR.
     *   Wrote and fixed Playwright E2E tests for unauthorized and authorized access attempts to protected routes, which are now all passing.
+*   **[NEW] Backend API Authentication Response:** The `/api/auth/register` and `/api/auth/login` endpoints **now correctly return a full `AuthResponse` object with a token**, resolving the previous backend issue. This means the frontend can now process authentication responses directly without needing to assume an empty body or immediately re-login.
+*   **[NEW] Implemented Dashboard Component (Frontend):**
+    *   Created `src/app/dashboard/dashboard.html` with a basic layout and placeholder content using Tailwind CSS.
+    *   Confirmed `src/app/dashboard/dashboard.scss` can remain minimal or empty due to Tailwind CSS usage.
+    *   Wrote and fixed Playwright E2E tests (`e2e/dashboard.spec.ts`) for dashboard viewing (authenticated access and unauthenticated redirection), which are now passing.
 
 ### Remaining Issues & Next Steps:
 
-1.  **Backend API Response Validation:** While E2E tests now pass due to mock token handling, a direct backend API response for `/api/auth/register` and `/api/auth/login` currently returning an empty body needs to be addressed by the backend team to allow the frontend to correctly process authentication *without mocks*.
-2.  **Implement Dashboard Component:**
-    *   Create `src/app/dashboard/dashboard.html` and `src/app/dashboard/dashboard.scss`.
-    *   Implement basic dashboard layout and data display.
-    *   Write Playwright E2E tests for dashboard viewing.
-3.  **Quarterly Data Entry & Submission Components:** Start development of UI for inputting income/expenses and simulated submission.
+1.  **Quarterly Data Entry & Submission Components:** Start development of UI for inputting income/expenses and simulated submission. This will involve:
+    *   Creating new components for quarterly updates.
+    *   Implementing forms for income and expense entry.
+    *   Integrating with relevant API endpoints (`apiQuarterIdPut`, `apiQuarterIdSubmitPost`, `apiQuartersGet`).
+    *   Writing Playwright E2E tests for these new features.
+2.  **Data Enrichment Display:** Implement UI for Net Profit/Loss and Cumulative Estimated Tax Liability.
+3.  **Data Visualization:** Implement UI for Income vs. Expenses trend comparison.

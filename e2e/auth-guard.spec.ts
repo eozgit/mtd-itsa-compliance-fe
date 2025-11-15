@@ -1,11 +1,6 @@
 import { test, expect } from '@playwright/test';
+import { TEST_USER } from './shared';
 
-// Define a test user object for localStorage mocking
-const TEST_USER = {
-  userId: 'mock-test-user-id',
-  userName: 'TestUser',
-  token: 'mock-jwt-token-authenticated',
-};
 
 test.describe('Auth Guard', () => {
   // The global console listener is no longer needed after debugging SSR
