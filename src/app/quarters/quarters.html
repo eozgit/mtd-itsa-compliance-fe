@@ -1,0 +1,86 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Quarterly Updates</h1>
+
+  <div class="flex justify-end mb-4">
+    <button
+      (click)="navigateToEditFirstDraft()"
+      [disabled]="!firstDraftQuarterId"
+      class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {{ firstDraftQuarterId ? 'Edit First Draft Quarter' : 'No Drafts Available' }}
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center text-gray-600">Loading quarterly data...</div>
+  <div *ngIf="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+    <p class="font-bold">Error:</p>
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error">
+    <div *ngIf="quarters.length === 0" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+      <p class="font-bold">No quarterly updates found.</p>
+      <p>This might happen if no business is registered or an issue occurred. Please check business registration.</p>
+    </div>
+
+    <div *ngIf="quarters.length > 0" class="bg-white shadow-md rounded-lg overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Quarter
+            </th>
+            <!-- Removed Period column header as periodStart/End are not in the model -->
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Taxable Income
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Allowable Expenses
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Net Profit
+            </th>
+            <th scope="col" class="relative px-6 py-3">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let quarter of quarters">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              {{ quarter.quarterName }} ({{ quarter.taxYear }})
+            </td>
+            <!-- Removed Period display as periodStart/End are not in the model -->
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <span
+                [ngClass]="{
+                  'px-2 inline-flex text-xs leading-5 font-semibold rounded-full': true,
+                  'bg-green-100 text-green-800': quarter.status === 'Submitted',
+                  'bg-blue-100 text-blue-800': quarter.status === 'Draft'
+                }"
+              >
+                {{ quarter.status }}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ quarter.taxableIncome | currency:'GBP':'symbol' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ quarter.allowableExpenses | currency:'GBP':'symbol' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ quarter.netProfit | currency:'GBP':'symbol' }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <a *ngIf="quarter.status === 'Draft'" [routerLink]="['/quarters/edit', quarter.id]" class="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
+              <span *ngIf="quarter.status === 'Submitted'" class="text-gray-400 cursor-not-allowed">View (Submitted)</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

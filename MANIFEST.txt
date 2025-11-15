@@ -1,10 +1,10 @@
-MANIFEST.txt
 .editorconfig
 .gitignore
 .vscode/extensions.json
 .vscode/launch.json
 .vscode/tasks.json
 LICENSE
+MANIFEST.txt
 PROGRESS.md
 README.md
 angular.json
@@ -68,6 +68,12 @@ src/app/dashboard/dashboard.html
 src/app/dashboard/dashboard.scss
 src/app/dashboard/dashboard.spec.ts
 src/app/dashboard/dashboard.ts
+src/app/quarters/quarter-form/quarter-form.html
+src/app/quarters/quarter-form/quarter-form.scss
+src/app/quarters/quarter-form/quarter-form.ts
+src/app/quarters/quarters.html
+src/app/quarters/quarters.scss
+src/app/quarters/quarters.ts
 src/app/setup/setup.html
 src/app/setup/setup.scss
 src/app/setup/setup.spec.ts
