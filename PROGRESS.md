@@ -1,4 +1,3 @@
-
 # Project Progress Log: MTD-ITSA Compliance Portal Frontend
 
 This document tracks the overall progress of the MTD-ITSA Compliance Portal Frontend development, outlining the main objectives, completed tasks, and upcoming work items. It is intended to provide a clear overview for any resuming developer, including the AI assistant.
@@ -34,11 +33,11 @@ The primary goal is to build a robust, full-stack boilerplate for a Making Tax D
 
 ## III. Frontend Development Progress
 
-### Current Status: Core Angular App Stable, All 13 Playwright E2E Tests Passing (Login, Register, Business Setup, Auth Guard, Dashboard)
+### Current Status: Core Angular App Stable, All 21 Playwright E2E Tests Passing (Login, Register, Business Setup, Auth Guard, Dashboard, Quarterly Data, Quarterly Summary, Dynamic Net Profit in Form)
 
-The Angular application is now compiling, serving, and rendering correctly. Server-Side Rendering (SSR) has been successfully removed, simplifying the application architecture and resolving test environment complexities. Client-side routing for deep links (`/auth/login`) is fully functional. Playwright is set up, and all 13 E2E tests, including those for Login, Register, Business Setup, Auth Guard, and now the **Dashboard**, are passing for Chromium. Firefox and WebKit have been removed from the Playwright configuration as Safari/Firefox compatibility is not a requirement. The Business Setup component is fully implemented on the frontend, and its E2E tests are now passing, indicating that the test environment successfully provides the necessary authentication token.
+The Angular application is now compiling, serving, and rendering correctly. Server-Side Rendering (SSR) has been successfully removed, simplifying the application architecture and resolving test environment complexities. Client-side routing for deep links (`/auth/login`) is fully functional. Playwright is set up, and **all 21 E2E tests are passing for Chromium.** This includes tests for Login, Register, Business Setup, Auth Guard, Dashboard, Quarterly Data Entry and Listing, the Financial Summary display on the Quarters page, and now also the **dynamic Net Profit/Loss calculation and display within the QuarterForm**. Firefox and WebKit have been removed from the Playwright configuration as Safari/Firefox compatibility is not a requirement. The Business Setup component is fully implemented on the frontend, and its E2E tests are now passing, indicating that the test environment successfully provides the necessary authentication token. The Quarterly Listing and Entry/Submission components are also implemented and passing their E2E tests.
 
-**Last Confirmed State:** `npm run start` serves the Angular app successfully at `http://localhost:4200/auth/login`, rendering the login form. `npm run test:e2e` now shows **13 passed tests** (Login, Register, Business Setup, Auth Guard, and Dashboard E2E).
+**Last Confirmed State:** `npm run start` serves the Angular app successfully at `http://localhost:4200/auth/login`, rendering the login form. `npm run test:e2e` now shows **21 passed tests** (Login, Register, Business Setup, Auth Guard, Dashboard, Quarters E2E, Quarters Financial Summary, and Quarter Form Dynamic Net Profit E2E).
 
 ### Completed Tasks:
 
@@ -80,18 +79,26 @@ The Angular application is now compiling, serving, and rendering correctly. Serv
     *   Updated `app.routes.ts` to apply the guard to `/setup` and `/dashboard`.
     *   Modified `AuthService` and `AuthGuard` (removing `_isAuthServiceReady`, simplifying `combineLatest` usage) to function correctly without SSR.
     *   Wrote and fixed Playwright E2E tests for unauthorized and authorized access attempts to protected routes, which are now all passing.
-*   **[NEW] Backend API Authentication Response:** The `/api/auth/register` and `/api/auth/login` endpoints **now correctly return a full `AuthResponse` object with a token**, resolving the previous backend issue. This means the frontend can now process authentication responses directly without needing to assume an empty body or immediately re-login.
-*   **[NEW] Implemented Dashboard Component (Frontend):**
+*   **Backend API Authentication Response:** The `/api/auth/register` and `/api/auth/login` endpoints **now correctly return a full `AuthResponse` object with a token**, resolving the previous backend issue. This means the frontend can now process authentication responses directly without needing to assume an empty body or immediately re-login.
+*   **Implemented Dashboard Component (Frontend):**
     *   Created `src/app/dashboard/dashboard.html` with a basic layout and placeholder content using Tailwind CSS.
     *   Confirmed `src/app/dashboard/dashboard.scss` can remain minimal or empty due to Tailwind CSS usage.
     *   Wrote and fixed Playwright E2E tests (`e2e/dashboard.spec.ts`) for dashboard viewing (authenticated access and unauthenticated redirection), which are now passing.
+*   **Implemented Quarterly Data Entry & Submission Components (Frontend):**
+    *   Created `src/app/quarters/quarters.html` and `src/app/quarters/quarters.scss` for listing quarters.
+    *   Created `src/app/quarters/quarter-form/quarter-form.html` and `src/app/quarters/quarter-form/quarter-form.scss` for entering/editing data.
+    *   Implemented logic in `Quarters` component to fetch and display quarterly updates using `apiQuartersGet`.
+    *   Implemented logic in `QuarterForm` component for handling forms (ReactiveFormsModule), saving drafts (`apiQuarterIdPut`), and submitting quarters (`apiQuarterIdSubmitPost`).
+    *   Wrote and fixed Playwright E2E tests (`e2e/quarters.spec.ts`) for listing, viewing, and navigating to edit draft quarters, which are now all passing.
+*   **Implemented Financial Summary Display on Quarters Page (Frontend):**
+    *   Updated `src/app/quarters/quarters.ts` to store `totalNetProfitSubmitted` and `cumulativeEstimatedTaxLiability` from the API response.
+    *   Updated `src/app/quarters/quarters.html` to display these summary values using Tailwind CSS for formatting.
+    *   Added a new E2E test to `e2e/quarters.spec.ts` to verify the correct display of these financial summaries. This test is now passing.
+*   **[NEW] Implemented Dynamic Net Profit/Loss in Quarter Form (Frontend):**
+    *   Updated `src/app/quarters/quarter-form/quarter-form.ts` to dynamically calculate `netProfit` as `taxableIncome` and `allowableExpenses` are changed. Includes `ChangeDetectorRef` for `OnPush` strategy and handles potential `undefined` values.
+    *   Updated `src/app/quarters/quarter-form/quarter-form.html` to display the dynamically calculated `netProfit`.
+    *   Added a new E2E test to `e2e/quarters.spec.ts` to verify the correct dynamic calculation and display of Net Profit/Loss. This test is now passing.
 
 ### Remaining Issues & Next Steps:
 
-1.  **Quarterly Data Entry & Submission Components:** Start development of UI for inputting income/expenses and simulated submission. This will involve:
-    *   Creating new components for quarterly updates.
-    *   Implementing forms for income and expense entry.
-    *   Integrating with relevant API endpoints (`apiQuarterIdPut`, `apiQuarterIdSubmitPost`, `apiQuartersGet`).
-    *   Writing Playwright E2E tests for these new features.
-2.  **Data Enrichment Display:** Implement UI for Net Profit/Loss and Cumulative Estimated Tax Liability.
-3.  **Data Visualization:** Implement UI for Income vs. Expenses trend comparison.
+1.  **Data Visualization (E3):** Implement UI for Income vs. Expenses trend comparison, likely on the Dashboard or a dedicated report page.

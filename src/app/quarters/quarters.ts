@@ -25,6 +25,10 @@ export class Quarters implements OnInit {
   error: string | null = null;
   firstDraftQuarterId: string | null = null; // Revert type to just 'string | null' for simplicity, as we ensure null/string explicitly
 
+  // NEW: Properties for summary data
+  totalNetProfitSubmitted: number | null = null;
+  cumulativeEstimatedTaxLiability: number | null = null;
+
   ngOnInit(): void {
     console.log('Quarters: ngOnInit called. Initial loading:', this.loading);
     if (this.authService.isAuthenticated()) {
@@ -50,6 +54,10 @@ export class Quarters implements OnInit {
         console.log('Quarters: apiQuartersGet resolved. Full response object:', response);
         if (response && response.quarters) {
           this.quarters = response.quarters; // Assign response.quarters directly to quarters
+
+          this.totalNetProfitSubmitted = response.totalNetProfitSubmitted ?? null;
+          this.cumulativeEstimatedTaxLiability = response.cumulativeEstimatedTaxLiability ?? null;
+
           console.log(`Quarters: Received ${this.quarters.length} quarters.`);
           this.quarters.forEach((q, index) => {
             console.log(`Quarters: Quarter ${index + 1} ID: ${q.id}, Name: ${q.quarterName}, Status: ${q.status}`);

@@ -236,5 +236,109 @@ test.describe('Quarters List Page', () => {
       await expect(page).toHaveURL('/quarters/edit/q2-specific-draft');
       await expect(page.locator('app-quarter-form')).toBeVisible();
     });
+
+
+
+    test('should display financial summary correctly', async ({ page }) => {
+      const mockTotalNetProfit = 12345.67;
+      const mockCumulativeTaxLiability = 2469.13;
+
+      // Mock the API response to include summary data
+      await page.route('**/api/quarters', async route => {
+        const mockResponse = {
+          quarters: [
+            {
+              id: 'mock-q1-submitted',
+              taxYear: '2025/2026',
+              quarterName: 'Q1',
+              status: 'SUBMITTED',
+              taxableIncome: 10000,
+              allowableExpenses: 5000,
+              netProfit: 5000
+            },
+            {
+              id: 'mock-q2-submitted',
+              taxYear: '2025/2026',
+              quarterName: 'Q2',
+              status: 'SUBMITTED',
+              taxableIncome: 15000,
+              allowableExpenses: 7654.33,
+              netProfit: 7345.67
+            }
+          ],
+          totalNetProfitSubmitted: mockTotalNetProfit,
+          cumulativeEstimatedTaxLiability: mockCumulativeTaxLiability
+        };
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(mockResponse),
+        });
+      });
+
+      // Re-navigate to /quarters to ensure the mock is active for the component's data fetch
+      await page.goto('/quarters');
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(500); // Small wait for Angular to render
+
+      // Assert that the Financial Summary section and its values are visible
+      await expect(page.locator('h2', { hasText: 'Financial Summary' })).toBeVisible();
+      await expect(page.locator('p:has-text("Total Net Profit (Submitted Quarters):") + p')).toContainText('£12,345.67');
+      await expect(page.locator('p:has-text("Cumulative Estimated Tax Liability:") + p')).toContainText('£2,469.13');
+    });
+
+
+    test('should dynamically calculate and display Net Profit/Loss in quarter form', async ({ page }) => {
+      const draftQuarterId = 'dynamic-net-profit-q';
+      // Mock API response for /api/quarters endpoint to ensure predictable data
+      await page.route('**/api/quarters', async route => {
+        console.log('PLAYWRIGHT MOCK: Intercepting /api/quarters for QuarterForm dynamic net profit test.'); // DEBUG LOG
+        const mockQuarters = {
+          quarters: [
+            {
+              id: draftQuarterId,
+              taxYear: '2025/2026',
+              quarterName: 'Q1',
+              status: 'DRAFT',
+              taxableIncome: 5000,
+              allowableExpenses: 2000,
+              netProfit: 3000,
+            },
+          ],
+          totalNetProfitSubmitted: 0,
+          cumulativeEstimatedTaxLiability: 0,
+        };
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(mockQuarters),
+        });
+      });
+
+      // Navigate to the QuarterForm for the specific draft quarter
+      await page.goto(`/quarters/edit/${draftQuarterId}`);
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(500); // Small wait for Angular to render
+
+      // NEW: Explicitly wait for the "Net Profit/Loss" label to be visible before checking the value
+      await expect(page.locator('p:has-text("Net Profit/Loss:")')).toBeVisible();
+
+      // Assert initial net profit display from fetched data
+      const netProfitDisplay = page.locator('.text-2xl.font-extrabold.text-indigo-700');
+      await expect(netProfitDisplay).toContainText('£3,000.00');
+
+      // Change Taxable Income and verify net profit updates
+      await page.locator('#taxableIncome').fill('10000');
+      await expect(netProfitDisplay).toContainText('£8,000.00'); // 10000 - 2000
+
+      // Change Allowable Expenses and verify net profit updates
+      await page.locator('#allowableExpenses').fill('4000');
+      await expect(netProfitDisplay).toContainText('£6,000.00'); // 10000 - 4000
+
+      // Edge case: negative profit
+      await page.locator('#taxableIncome').fill('1000');
+      await expect(netProfitDisplay).toContainText('-£3,000.00'); // 1000 - 4000
+    });
+
   });
 });
