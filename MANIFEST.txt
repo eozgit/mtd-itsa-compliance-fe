@@ -7,10 +7,12 @@ LICENSE
 MANIFEST.txt
 PROGRESS.md
 README.md
+REQ_SPEC.md
 angular.json
 e2e/auth-guard.spec.ts
 e2e/dashboard.spec.ts
 e2e/login.spec.ts
+e2e/quarters.spec.ts
 e2e/register.spec.ts
 e2e/setup.spec.ts
 e2e/shared.ts

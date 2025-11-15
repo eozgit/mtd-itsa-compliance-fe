@@ -19,10 +19,11 @@ export const authGuard: CanActivateFn = (route, state): Observable<boolean | Url
         console.log(`AuthGuard (combineLatest map): isAuthenticated is TRUE. Allowing access to ${state.url}.`);
         return true;
       } else {
-        console.log(`AuthGuard (combineLatest map): isAuthenticated is FALSE. Redirecting to /auth/login for ${state.url}.`);
-        return router.createUrlTree(['/auth/login'], {
-          queryParams: { returnUrl: state.url }
-        });
+        console.log('AuthGuard (combineLatest map): isAuthenticated$ value: false');
+        console.log('AuthGuard (combineLatest map): isAuthenticated is FALSE. Redirecting to login.');
+        const redirectUrlTree = router.createUrlTree(['/auth/login'], { queryParams: { returnUrl: state.url } });
+        console.log('AuthGuard: Redirecting to:', redirectUrlTree.toString()); // Added for debugging
+        return redirectUrlTree;
       }
     })
   );

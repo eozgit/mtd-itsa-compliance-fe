@@ -30,7 +30,6 @@
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Quarter
             </th>
-            <!-- Removed Period column header as periodStart/End are not in the model -->
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Status
             </th>
@@ -53,13 +52,12 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
               {{ quarter.quarterName }} ({{ quarter.taxYear }})
             </td>
-            <!-- Removed Period display as periodStart/End are not in the model -->
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <span
                 [ngClass]="{
                   'px-2 inline-flex text-xs leading-5 font-semibold rounded-full': true,
-                  'bg-green-100 text-green-800': quarter.status === 'Submitted',
-                  'bg-blue-100 text-blue-800': quarter.status === 'Draft'
+                  'bg-green-100 text-green-800': quarter.status === 'SUBMITTED',
+                  'bg-blue-100 text-blue-800': quarter.status === 'DRAFT'
                 }"
               >
                 {{ quarter.status }}
@@ -75,8 +73,8 @@
               {{ quarter.netProfit | currency:'GBP':'symbol' }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              <a *ngIf="quarter.status === 'Draft'" [routerLink]="['/quarters/edit', quarter.id]" class="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
-              <span *ngIf="quarter.status === 'Submitted'" class="text-gray-400 cursor-not-allowed">View (Submitted)</span>
+              <a *ngIf="quarter.status === 'DRAFT'" [routerLink]="['/quarters/edit', quarter.id]" class="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
+              <span *ngIf="quarter.status === 'SUBMITTED'" class="text-gray-400 cursor-not-allowed">View (Submitted)</span>
             </td>
           </tr>
         </tbody>
