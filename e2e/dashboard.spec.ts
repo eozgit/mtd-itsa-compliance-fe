@@ -1,21 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { TEST_USER } from './shared'; // Import TEST_USER from the shared module
 
 test.describe('Dashboard', () => {
   // Test 1: Ensure dashboard loads correctly for an authenticated user
   test('should display the dashboard for an authenticated user', async ({ page }) => {
     await test.step('Set up authenticated session and navigate to dashboard', async () => {
-      // Use addInitScript to inject the authentication token into localStorage
-      // before the page loads, as seen in auth-guard.spec.ts
-      await page.context().addInitScript((user) => {
-        localStorage.clear(); // Ensure a clean slate
-        localStorage.setItem('auth_token', user.token);
-        const userData = { userId: user.userId, userName: user.userName };
-        localStorage.setItem('current_user', JSON.stringify(userData));
-      }, TEST_USER);
-
-      // Now navigate to the dashboard
       await page.goto('/dashboard');
+      await page.waitForLoadState('networkidle'); // Added for robustness
     });
 
     await test.step('Verify dashboard elements', async () => {

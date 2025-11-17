@@ -50,5 +50,3 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 
-# File contents for code assistant
-FILE_CONTENTS.txt

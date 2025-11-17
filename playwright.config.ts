@@ -33,11 +33,16 @@ export default defineConfig({
     },
   },
 
+  globalSetup: require.resolve('./e2e/auth.setup'),
+
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright-auth-state.json',
+      },
     },
     /*{
       name: 'firefox',

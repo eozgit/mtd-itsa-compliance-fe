@@ -1,0 +1,18 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:4200",
+      "localStorage": [
+        {
+          "name": "auth_token",
+          "value": "mock-jwt-token-authenticated"
+        },
+        {
+          "name": "current_user",
+          "value": "{\"userId\":\"mock-test-user-id\",\"userName\":\"TestUser\"}"
+        }
+      ]
+    }
+  ]
+}

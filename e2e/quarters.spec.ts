@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { TEST_USER } from './shared'; // Assuming TEST_USER contains a valid token and user info
 
 test.describe('Quarters List Page', () => {
 
@@ -44,14 +43,6 @@ test.describe('Quarters List Page', () => {
           body: JSON.stringify(mockResponse),
         });
       });
-
-      // 2. Set the initial local storage state via an Init Script.
-      await page.context().addInitScript((user) => {
-        localStorage.clear();
-        localStorage.setItem('auth_token', user.token);
-        const userData = { userId: user.userId, userName: user.userName };
-        localStorage.setItem('current_user', JSON.stringify(userData));
-      }, TEST_USER);
 
       // 3. Navigate to the protected page.
       await page.goto('/quarters');

@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Required for standalone components
-import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts'; // Import NgChartsModule for standalone
-import { QuarterlyUpdate } from '../core/api/models/quarterly-update'; // Corrected path to generated model
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import { QuarterlyUpdate } from '../core/api/models/quarterly-update';
 
 @Component({
   selector: 'app-quarterly-trend-chart',
-  standalone: true, // Mark as standalone
-  imports: [CommonModule, BaseChartDirective], // Add CommonModule and NgChartsModule here
+  standalone: true,
+  imports: [CommonModule, BaseChartDirective],
   templateUrl: './quarterly-trend-chart.html',
   styleUrls: ['./quarterly-trend-chart.scss'],
 })
@@ -62,7 +62,7 @@ export class QuarterlyTrendChartComponent implements OnInit, OnChanges {
   };
   public lineChartType: 'line' = 'line';
 
-  constructor() { }
+  constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.updateChartData();
@@ -70,24 +70,24 @@ export class QuarterlyTrendChartComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['quarters'] && this.quarters) {
-      console.log('QuarterlyTrendChartComponent: quarters @Input received', this.quarters); // ADD THIS
       this.updateChartData();
     }
   }
 
   private updateChartData(): void {
-    console.log('QuarterlyTrendChartComponent: updateChartData called with quarters', this.quarters); // ADD THIS
+    console.log('QuarterlyTrendChartComponent: updateChartData with quarters length:', this.quarters?.length);
     if (!this.quarters || this.quarters.length === 0) {
       this.lineChartData.labels = [];
       this.lineChartData.datasets[0].data = [];
       this.lineChartData.datasets[1].data = [];
-      console.log('QuarterlyTrendChartComponent: No quarters data, chart will be empty.'); // ADD THIS
+      this.lineChartData = { ...this.lineChartData };
+      console.log('QuarterlyTrendChartComponent: updateChartData - no quarters, setting empty data. Calling detectChanges.');
+      this.cd.detectChanges();
       return;
     }
 
     // Sort quarters by taxYear and quarterName to ensure correct trend order
     const sortedQuarters = [...this.quarters].sort((a, b) => {
-      // Handle potential undefined taxYear or quarterName gracefully
       const yearA = parseInt(a.taxYear?.split('/')[0] || '0', 10);
       const yearB = parseInt(b.taxYear?.split('/')[0] || '0', 10);
       if (yearA !== yearB) return yearA - yearB;
@@ -96,14 +96,29 @@ export class QuarterlyTrendChartComponent implements OnInit, OnChanges {
       return (quarterOrder[a.quarterName || ''] || 0) - (quarterOrder[b.quarterName || ''] || 0);
     });
 
-    this.lineChartData.labels = sortedQuarters.map(q => `${q.quarterName || ''} ${q.taxYear?.substring(2) || ''}`);
-    this.lineChartData.datasets[0].data = sortedQuarters.map(q => q.taxableIncome || 0);
-    this.lineChartData.datasets[1].data = sortedQuarters.map(q => q.allowableExpenses || 0);
+    const newLabels = sortedQuarters.map(q => `${q.quarterName || ''} ${q.taxYear?.substring(2) || ''}`);
 
-    console.log('QuarterlyTrendChartComponent: Income data:', this.lineChartData.datasets[0].data); // ADD THIS
-    console.log('QuarterlyTrendChartComponent: Expenses data:', this.lineChartData.datasets[1].data); // ADD THIS
-    console.log('QuarterlyTrendChartComponent: Chart labels:', this.lineChartData.labels); // ADD THIS
-    // This is important to trigger chart update in ng2-charts
-    this.lineChartData = { ...this.lineChartData };
+    // Using camelCase properties (confirmed by compiler errors) and nullish coalescing (?? 0) for safety
+    const newIncomeData = sortedQuarters.map(q => q.taxableIncome ?? 0);
+    const newExpensesData = sortedQuarters.map(q => q.allowableExpenses ?? 0);
+
+    // Create a deep copy of the ChartConfiguration object to ensure ng2-charts detects the change.
+    this.lineChartData = {
+      labels: newLabels,
+      datasets: [
+        {
+          ...this.lineChartData.datasets[0],
+          data: newIncomeData
+        },
+        {
+          ...this.lineChartData.datasets[1],
+          data: newExpensesData
+        },
+      ],
+    };
+
+    // Removed the setTimeout. Let Angular's change detection immediately propagate.
+    console.log('QuarterlyTrendChartComponent: updateChartData - updated lineChartData. Calling detectChanges immediately.');
+    this.cd.detectChanges();
   }
 }

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs'; // Subject is still needed for OnDestroy
 
 import { Api } from '../core/api/api';
 import { apiQuartersGet } from '../core/api/functions';
