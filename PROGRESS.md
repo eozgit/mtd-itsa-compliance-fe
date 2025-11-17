@@ -1,3 +1,4 @@
+
 # Project Progress Log: MTD-ITSA Compliance Portal Frontend
 
 This document tracks the overall progress of the MTD-ITSA Compliance Portal Frontend development, outlining the main objectives, completed tasks, and upcoming work items. It is intended to provide a clear overview for any resuming developer, including the AI assistant.
@@ -98,7 +99,14 @@ The Angular application is now compiling, serving, and rendering correctly. Serv
     *   Updated `src/app/quarters/quarter-form/quarter-form.ts` to dynamically calculate `netProfit` as `taxableIncome` and `allowableExpenses` are changed. Includes `ChangeDetectorRef` for `OnPush` strategy and handles potential `undefined` values.
     *   Updated `src/app/quarters/quarter-form/quarter-form.html` to display the dynamically calculated `netProfit`.
     *   Added a new E2E test to `e2e/quarters.spec.ts` to verify the correct dynamic calculation and display of Net Profit/Loss. This test is now passing.
+*   **[NEW] Implemented Data Visualization (E3) - Income vs. Expenses Trend Comparison:**
+    *   Created `src/app/quarterly-trend-chart/quarterly-trend-chart.ts` and its associated template/styles.
+    *   Configured `quarterly-trend-chart.ts` as a standalone component, correctly importing `CommonModule` and `BaseChartDirective` from `ng2-charts`.
+    *   Integrated Chart.js and its necessary components (`LineController`, `CategoryScale`, `LinearScale`, `PointElement`, `LineElement`, `Title`, `Tooltip`, `Legend`, `Filler`) by registering them in `src/main.ts`.
+    *   Updated `src/app/dashboard/dashboard.ts` to fetch quarterly data using the generated `ApiService` (`apiQuartersGet`) and pass it to the chart component. Included `ChangeDetectorRef` to correctly update the chart with fetched data under `OnPush` strategy.
+    *   Embedded `<app-quarterly-trend-chart>` in `src/app/dashboard/dashboard.html`.
+    *   Confirmed chart correctly displays data (or zeros if backend provides zeros).
 
 ### Remaining Issues & Next Steps:
 
-1.  **Data Visualization (E3):** Implement UI for Income vs. Expenses trend comparison, likely on the Dashboard or a dedicated report page.
+*(No remaining issues for frontend implementation based on the plan. The next logical step would be E2E tests for the new visualization, or backend work to provide non-zero data.)*
