@@ -53,6 +53,34 @@ This video demonstrates the successful rendering of the Dashboard page after a u
 
 https://github.com/user-attachments/assets/7213602e-ce76-49b2-b6b5-7617f5001913
 
+---
+
+## 🚀 Deployment and Local Development with Docker
+
+To run the MTD-ITSA Compliance Portal locally using **Docker Compose**, including the required backend services and database, you must use the separate deployment repository.
+
+Follow these steps from your terminal:
+
+1.  **Clone the Deployment Manifests Repository:**
+    ```bash
+    git clone [https://github.com/eozgit/deployment-manifests](https://github.com/eozgit/deployment-manifests)
+    ```
+
+2.  **Navigate to the Application Directory:**
+    ```bash
+    cd deployment-manifests/mtd-itsa-compliance
+    ```
+
+3.  **Build and Run the Services:**
+    Use Docker Compose to build the application containers (including this frontend application) and start all services in detached mode (`-d`).
+
+    The frontend container image will be built from the source code in the `deployment-manifests` repository.
+
+    ```bash
+    docker compose up --build -d
+    ```
+
+Once the services are up, the frontend application will be available in your browser at `http://localhost:4200`.
 
 ---
 
