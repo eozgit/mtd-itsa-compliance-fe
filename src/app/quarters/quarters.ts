@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, ChangeDetectorRef } from '@angular/core'; // Import ChangeDetectorRef
+import { ChangeDetectionStrategy, Component, inject, OnInit, ChangeDetectorRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // Import ChangeDetectorRef
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Api } from '../core/api/api';
@@ -12,6 +12,7 @@ import { AuthService } from '../core/services/auth';
   imports: [CommonModule, RouterLink],
   templateUrl: './quarters.html',
   styleUrl: './quarters.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush, // Important for this debugging
 })
 export class Quarters implements OnInit {

@@ -3,15 +3,22 @@
     {{ currentQuarterDetails ? (currentQuarterDetails.quarterName + ' (' + currentQuarterDetails.taxYear + ')') : 'Loading Quarter...' }}
   </h1>
 
-  <div *ngIf="loading" class="text-center text-gray-600">Loading quarter data...</div>
-  <div *ngIf="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+  @if (loading) {
+<div class="text-center text-gray-600">Loading quarter data...</div>
+  }
+  @if (error) {
+<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
     <p>{{ error }}</p>
   </div>
-  <div *ngIf="successMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+  }
+  @if (successMessage) {
+<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
     <p>{{ successMessage }}</p>
   </div>
+  }
 
-  <form [formGroup]="quarterForm" *ngIf="!loading && !error">
+  @if (!loading && !error) {
+<form [formGroup]="quarterForm">
     <!-- Removed Quarter Details section with periodStart/End as they are not in QuarterlyUpdate model -->
     <div class="bg-white shadow-md rounded-lg p-6 mb-6">
       <h2 class="text-xl font-semibold text-gray-700 mb-4">Financial Data</h2>
@@ -23,11 +30,13 @@
             type="number"
             formControlName="taxableIncome"
             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-            [ngClass]="{'border-red-500': taxableIncome?.invalid && taxableIncome?.touched}"
+            [class.border-red-500]="taxableIncome?.invalid && taxableIncome?.touched"
           >
-          <div *ngIf="taxableIncome?.invalid && taxableIncome?.touched" class="text-red-600 text-sm mt-1">
+          @if (taxableIncome?.invalid && taxableIncome?.touched) {
+<div class="text-red-600 text-sm mt-1">
             Taxable Income is required and must be non-negative.
           </div>
+          }
         </div>
         <div>
           <label for="allowableExpenses" class="block text-sm font-medium text-gray-700">Allowable Expenses</label>
@@ -36,11 +45,13 @@
             type="number"
             formControlName="allowableExpenses"
             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-            [ngClass]="{'border-red-500': allowableExpenses?.invalid && allowableExpenses?.touched}"
+            [class.border-red-500]="allowableExpenses?.invalid && allowableExpenses?.touched"
           >
-          <div *ngIf="allowableExpenses?.invalid && allowableExpenses?.touched" class="text-red-600 text-sm mt-1">
+          @if (allowableExpenses?.invalid && allowableExpenses?.touched) {
+<div class="text-red-600 text-sm mt-1">
             Allowable Expenses is required and must be non-negative.
           </div>
+          }
         </div>
       </div>
       <div class="mt-4 pt-4 border-t border-gray-200">
@@ -77,4 +88,5 @@
       </button>
     </div>
   </form>
+  }
 </div>
