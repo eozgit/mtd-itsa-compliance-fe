@@ -38,11 +38,6 @@ https://github.com/user-attachments/assets/8b91786f-adc4-432c-8214-091c5fe317f2
 This image presents the main dashboard of the MTD-ITSA Compliance Portal. It welcomes the user and features an "Income vs. Expenses Trend" chart, providing a clear and engaging visualization of key financial data over time.
 ![Main User Dashboard with Financial Overview](https://raw.githubusercontent.com/eozgit/mtd-itsa-compliance-fe/main/media/chart-fully-rendered.png "Main User Dashboard showing Income vs. Expenses Trend")
 
-#### Listing of Available Quarterly Submissions (Drafts)
-This video illustrates the "Quarters List Page," where users can view their quarterly tax submissions. It effectively shows how draft quarters are clearly presented, indicating their availability for further editing or submission.
-
-https://github.com/user-attachments/assets/a78c7bef-07a4-4a9f-a307-912df1df4e5b
-
 #### Dynamic Net Profit/Loss Calculation in Quarterly Data Entry
 Observe the dynamic capabilities of the "Quarter Form" in this video. As users input their taxable income and allowable expenses, the system instantly calculates and displays the "Net Profit/Loss," providing immediate financial feedback.
 
@@ -51,7 +46,7 @@ https://github.com/user-attachments/assets/7213602e-ce76-49b2-b6b5-7617f5001913
 #### Main User Dashboard: Trend Chart Rendering
 This video demonstrates the successful rendering of the Dashboard page after a user has authenticated and the application has received quarterly data. It highlights the 'Income vs. Expenses Trend' chart being dynamically loaded and verified, confirming the correct display of financial data visualization components.
 
-https://github.com/user-attachments/assets/7213602e-ce76-49b2-b6b5-7617f5001913
+https://github.com/user-attachments/assets/1435aa35-a402-4805-8d2d-97807de0cd4f
 
 ---
 
