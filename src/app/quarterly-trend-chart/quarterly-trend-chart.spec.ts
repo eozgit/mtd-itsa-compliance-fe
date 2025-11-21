@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QuarterlyTrendChart } from './quarterly-trend-chart';
+import { QuarterlyTrendChartComponent } from './quarterly-trend-chart';
 
 describe('QuarterlyTrendChart', () => {
-  let component: QuarterlyTrendChart;
-  let fixture: ComponentFixture<QuarterlyTrendChart>;
+  let component: QuarterlyTrendChartComponent;
+  let fixture: ComponentFixture<QuarterlyTrendChartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [QuarterlyTrendChart]
+      imports: [QuarterlyTrendChartComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
-    fixture = TestBed.createComponent(QuarterlyTrendChart);
+    fixture = TestBed.createComponent(QuarterlyTrendChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
