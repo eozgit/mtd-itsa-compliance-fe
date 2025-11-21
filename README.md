@@ -58,7 +58,7 @@ Follow these steps from your terminal:
 
 1.  **Clone the Deployment Manifests Repository:**
     ```bash
-    git clone [https://github.com/eozgit/deployment-manifests](https://github.com/eozgit/deployment-manifests)
+    git clone https://github.com/eozgit/deployment-manifests
     ```
 
 2.  **Navigate to the Application Directory:**
